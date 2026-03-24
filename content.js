@@ -75,7 +75,7 @@ function getArticleKey() {
     overlay.style.background = "rgba(0, 0, 0, 0.7)";
     overlay.style.color = "#fff";
     overlay.style.fontSize = "12px";
-    overlay.style.fontFamily = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    overlay.style.fontFamily = "system-ui, 'Segoe UI', sans-serif";
     overlay.style.pointerEvents = "none";
     document.body.appendChild(overlay);
   }
