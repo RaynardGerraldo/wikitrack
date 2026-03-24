@@ -48,13 +48,31 @@
 
   const seen = new Set();
 
+  let overlay = document.getElementById("wikitrack-overlay");
+  if (!overlay) {
+    overlay = document.createElement("div");
+    overlay.id = "wikitrack-overlay";
+    overlay.style.position = "fixed";
+    overlay.style.bottom = "12px";
+    overlay.style.right = "12px";
+    overlay.style.zIndex = "9999";
+    overlay.style.padding = "4px 8px";
+    overlay.style.borderRadius = "4px";
+    overlay.style.background = "rgba(0, 0, 0, 0.7)";
+    overlay.style.color = "#fff";
+    overlay.style.fontSize = "12px";
+    overlay.style.fontFamily = "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+    overlay.style.pointerEvents = "none";
+    document.body.appendChild(overlay);
+  }
+
   function logProgress() {
     const progress = Math.round((seen.size / sections.length) * 100);
-    console.log(
-      "[wikitrack] progress:",
-      `${progress}%`,
-      `(${seen.size}/${sections.length} sections)`
-    );
+    const text = `${progress}% read (${seen.size}/${sections.length})`;
+    console.log("[wikitrack] progress:", text);
+    if (overlay) {
+      overlay.textContent = text;
+    }
   }
 
   const firstHeading = headings[0];
