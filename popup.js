@@ -28,11 +28,23 @@ function loadProgress() {
         ? `https://${e.lang || "en"}.wikipedia.org/wiki/${e.title}`
         : "#";
 
-      div.innerHTML =
-        `<div class="title"><a href="${url}" target="_blank" rel="noopener noreferrer">${
-          titleText || "(unknown)"
-        }</a></div>` +
-        `<div class="meta">${e.progress}% read (${e.readCount}/${e.total || "?"}) · ${e.lang}</div>`;
+      const titleDiv = document.createElement("div");
+      titleDiv.className = "title";
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = titleText || "(unknown)";
+
+      titleDiv.appendChild(link);
+
+      const metaDiv = document.createElement("div");
+      metaDiv.className = "meta";
+      metaDiv.textContent = `${e.progress}% read (${e.readCount}/${e.total || "?"}) · ${e.lang}`;
+
+      div.appendChild(titleDiv);
+      div.appendChild(metaDiv);
       listEl.appendChild(div);
     });
 

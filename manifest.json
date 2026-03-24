@@ -9,6 +9,14 @@
   "host_permissions": [
     "*://*.wikipedia.org/*"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "jmjw@wikitrack",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
   "content_scripts": [
     {
       "matches": ["*://*.wikipedia.org/wiki/*"],
