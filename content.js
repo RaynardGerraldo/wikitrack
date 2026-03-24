@@ -1,3 +1,16 @@
+
+function getArticleKey() {
+  const lang = document.documentElement.lang || "en";
+  const path = window.location.pathname || "";
+  // Expect paths like /wiki/Title
+  const titlePart = path.startsWith("/wiki/") ? path.slice("/wiki/".length) : path;
+  return {
+    lang,
+    title: titlePart,
+    storageKey: `progress:${lang}:${titlePart}`,
+  };
+}
+
 (function () {
   const heading = document.getElementById("firstHeading");
   const title = heading ? heading.textContent?.trim() : document.title;
@@ -75,35 +88,69 @@
     }
   }
 
-  const firstHeading = headings[0];
-  if (firstHeading) {
-    const rect = firstHeading.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      const id = firstHeading.dataset.wikitrackSectionId;
-      if (id) {
-        seen.add(id);
+  const { storageKey } = getArticleKey();
+
+  // Load existing progress from storage, then set up observers
+  chrome.storage.local.get(storageKey, (result) => {
+    const stored = result[storageKey];
+    if (stored && stored.sections) {
+      sections.forEach((s) => {
+        if (stored.sections[s.id]) {
+          seen.add(s.id);
+        }
+      });
+      if (seen.size > 0) {
         logProgress();
       }
     }
-  }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-
-        const id = entry.target.dataset.wikitrackSectionId;
-        if (!id || seen.has(id)) return;
-
-        seen.add(id);
-        logProgress();
-      });
-    },
-    {
-      root: null,
-      threshold: 0.1,
+    const firstHeading = headings[0];
+    if (firstHeading && seen.size === 0) {
+      const rect = firstHeading.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const id = firstHeading.dataset.wikitrackSectionId;
+        if (id) {
+          seen.add(id);
+          logProgress();
+        }
+      }
     }
-  );
 
-  headings.forEach((el) => observer.observe(el));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let changed = false;
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          const id = entry.target.dataset.wikitrackSectionId;
+          if (!id || seen.has(id)) return;
+
+          seen.add(id);
+          changed = true;
+        });
+
+        if (changed) {
+          logProgress();
+
+          const sectionsMap = {};
+          seen.forEach((id) => {
+            sectionsMap[id] = true;
+          });
+          chrome.storage.local.set({
+            [storageKey]: {
+              sections: sectionsMap,
+              totalSections: sections.length,
+              updatedAt: Date.now(),
+            },
+          });
+        }
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      }
+    );
+
+    headings.forEach((el) => observer.observe(el));
+  });
 })();
