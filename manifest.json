@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Wikitrack",
+  "version": "0.1.0",
+  "description": "Track Wikipedia reading progress by article and section.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.wikipedia.org/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.wikipedia.org/wiki/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
