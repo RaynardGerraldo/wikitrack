@@ -11,7 +11,10 @@ function loadProgress() {
       const title = parts.slice(2).join(":");
 
       const sections = value.sections || {};
-      const readCount = Object.keys(sections).length;
+      let readCount = Object.keys(sections).length;
+      if (typeof value.readCount === "number" && value.readCount > readCount) {
+        readCount = value.readCount;
+      }
       const total = value.totalSections || readCount;
       const progress = total > 0 ? Math.round((readCount / total) * 100) : 0;
 

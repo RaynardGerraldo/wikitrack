@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Wikitrack import</title>
+    <style>
+      body {
+        margin: 16px;
+        font-family: system-ui, 'Segoe UI', sans-serif;
+        font-size: 13px;
+        max-width: 480px;
+      }
+      #status {
+        margin-top: 12px;
+        font-size: 12px;
+      }
+      button {
+        margin-top: 8px;
+        padding: 4px 8px;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Import Wikitrack data</h1>
+    <p>Select a JSON file previously exported by Wikitrack.</p>
+    <input type="file" id="importFile" accept="application/json" />
+    <button id="import">Import</button>
+    <div id="status"></div>
+    <script src="import.js"></script>
+  </body>
+</html>

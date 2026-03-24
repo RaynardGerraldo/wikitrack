@@ -100,6 +100,15 @@ function getArticleKey() {
           seen.add(s.id);
         }
       });
+      if (seen.size === 0 && typeof stored.readCount === "number" && stored.readCount > 0) {
+        const target = Math.min(stored.readCount, sections.length);
+        for (let i = 0; i < target; i += 1) {
+          const sid = sections[i].id;
+          if (sid) {
+            seen.add(sid);
+          }
+        }
+      }
       if (seen.size > 0) {
         logProgress();
       }
@@ -141,6 +150,7 @@ function getArticleKey() {
             [storageKey]: {
               sections: sectionsMap,
               totalSections: sections.length,
+              readCount: seen.size,
               updatedAt: Date.now(),
             },
           });
