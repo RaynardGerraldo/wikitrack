@@ -24,8 +24,14 @@ function loadProgress() {
       const div = document.createElement("div");
       div.className = "item";
       const titleText = decodeURIComponent(e.title || "");
+      const url = e.title
+        ? `https://${e.lang || "en"}.wikipedia.org/wiki/${e.title}`
+        : "#";
+
       div.innerHTML =
-        `<div class="title">${titleText || "(unknown)"}</div>` +
+        `<div class="title"><a href="${url}" target="_blank" rel="noopener noreferrer">${
+          titleText || "(unknown)"
+        }</a></div>` +
         `<div class="meta">${e.progress}% read (${e.readCount}/${e.total || "?"}) · ${e.lang}</div>`;
       listEl.appendChild(div);
     });

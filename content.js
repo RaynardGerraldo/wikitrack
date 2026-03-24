@@ -11,6 +11,7 @@ function getArticleKey() {
   };
 }
 
+
 (function () {
   const heading = document.getElementById("firstHeading");
   const title = heading ? heading.textContent?.trim() : document.title;
